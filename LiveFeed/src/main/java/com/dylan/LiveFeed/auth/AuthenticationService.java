@@ -1,9 +1,9 @@
 package com.dylan.LiveFeed.auth;
 
-import com.springSecurity.security.config.JwtService;
-import com.springSecurity.security.user.Role;
-import com.springSecurity.security.user.User;
-import com.springSecurity.security.user.UserRepo;
+import com.dylan.LiveFeed.config.JwtService;
+import com.dylan.LiveFeed.user.Role;
+import com.dylan.LiveFeed.user.User;
+import com.dylan.LiveFeed.user.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,6 +1,6 @@
 package com.dylan.LiveFeed.config;
 
-import com.springSecurity.security.user.UserRepo;
+import com.dylan.LiveFeed.user.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
