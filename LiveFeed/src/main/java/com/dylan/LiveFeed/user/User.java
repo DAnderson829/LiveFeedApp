@@ -1,6 +1,6 @@
 package com.dylan.LiveFeed.user;
 
-import com.dylan.LiveFeed.message.Message;
+import com.dylan.LiveFeed.post.Post;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany
-    private List<Message> messages;
+    private List<Post> messages;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

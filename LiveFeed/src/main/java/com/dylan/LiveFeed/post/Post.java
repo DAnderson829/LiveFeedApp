@@ -1,4 +1,4 @@
-package com.dylan.LiveFeed.message;
+package com.dylan.LiveFeed.post;
 
 import com.dylan.LiveFeed.user.User;
 import jakarta.persistence.*;
@@ -10,8 +10,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Builder
 @Table(name = "message")
-public class Message {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,8 @@ public class Message {
     private LocalDateTime createdAt;
 
     private boolean updated;
+
+    private LocalDateTime updatedAt;
 
     private int likeCount;
 

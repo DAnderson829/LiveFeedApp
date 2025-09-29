@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/LiveFeed.iml" filepath="$PROJECT_DIR$/.idea/LiveFeed.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LiveFeed/LiveFeed.iml" filepath="$PROJECT_DIR$/LiveFeed/LiveFeed.iml" />
     </modules>
   </component>
 </project>
