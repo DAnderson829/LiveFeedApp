@@ -17,6 +17,10 @@ public class PostService {
 
     private final UserRepo userRepo;
 
+    private final InteractionService interactionService;
+
+    private final InteractionRepo interactionRepo;
+
     public Post createPost(String message, User user){
         Post post = Post.builder()
                 .message(message)
@@ -66,12 +70,7 @@ public class PostService {
         return postRepo.findByUserId(id);
     }
 
-    public void likeOrDislikePost(Long postId, User user, Interaction Interaction){
-        Optional<Post> postOpt = postRepo.findById(postId);
-        if(postOpt.isEmpty()) return;
-
-
+    public void interaction(Long postId, Long userId, InteractionType type){
+        Interaction interaction = interactionService.interactWithPost(postId, userId, type);
     }
-
-
 }
