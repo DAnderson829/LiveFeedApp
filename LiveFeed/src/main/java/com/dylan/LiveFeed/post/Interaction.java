@@ -4,6 +4,8 @@ import com.dylan.LiveFeed.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Builder
@@ -18,10 +20,12 @@ public class Interaction {
     private InteractionType type;
 
     @JoinColumn(name = "user_id")
-    @OneToMany
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
     @JoinColumn(name = "post_id")
-    @OneToMany
+    @ManyToOne
     private Post post;
+
+    private LocalDateTime interactionTime;
 }

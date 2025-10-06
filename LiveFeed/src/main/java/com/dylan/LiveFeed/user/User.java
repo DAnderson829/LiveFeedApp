@@ -40,7 +40,7 @@ public class User implements UserDetails {
     @OneToMany
     private List<Post> messages;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<Interaction> interactions;
 
     @Override

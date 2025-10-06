@@ -9,8 +9,8 @@ import java.util.List;
 
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
-    @Query(value = "SELECT * FROM messages ORDER BY created_at DESC LIMIT 20", nativeQuery = true)
-    List<Post> findLast20Messages();
+    @Query(value = "SELECT * FROM post ORDER BY created_at DESC LIMIT 20", nativeQuery = true)
+    List<Post> findLast20Posts();
 
     List<Post> findByUserId(Long userId);
 }

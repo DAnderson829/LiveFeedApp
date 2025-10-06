@@ -1,6 +1,7 @@
 package com.dylan.LiveFeed.auth;
 
 import com.dylan.LiveFeed.config.JwtService;
+import com.dylan.LiveFeed.exception.EmailAlreadyExistsException;
 import com.dylan.LiveFeed.user.Role;
 import com.dylan.LiveFeed.user.User;
 import com.dylan.LiveFeed.user.UserRepo;
@@ -23,6 +24,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request){
+        if(repo.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+
         var user = User.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
