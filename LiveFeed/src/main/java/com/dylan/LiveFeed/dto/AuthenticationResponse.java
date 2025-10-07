@@ -1,4 +1,4 @@
-package com.dylan.LiveFeed.auth;
+package com.dylan.LiveFeed.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

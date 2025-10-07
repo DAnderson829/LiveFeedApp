@@ -2,6 +2,7 @@ package com.dylan.LiveFeed.init;
 
 import com.dylan.LiveFeed.auth.AuthenticationService;
 import com.dylan.LiveFeed.auth.RegisterRequest;
+import com.dylan.LiveFeed.dto.PostRequest;
 import com.dylan.LiveFeed.post.PostRepo;
 import com.dylan.LiveFeed.post.PostService;
 import com.dylan.LiveFeed.user.User;
@@ -49,8 +50,10 @@ public class Init {
         Random rand = new Random();
         for(int i = 0;i<20;i++){
             User randomUser = users[rand.nextInt(users.length)];
-            String randomPost = posts[rand.nextInt(posts.length)];
-            postService.createPost(randomPost, randomUser);
+            String message = posts[rand.nextInt(posts.length)];
+            PostRequest request = new PostRequest(message);
+
+            postService.createPost(request, randomUser);
         }
 
         }

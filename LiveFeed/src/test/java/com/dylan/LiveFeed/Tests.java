@@ -1,10 +1,11 @@
 package com.dylan.LiveFeed;
 
-import com.dylan.LiveFeed.auth.AuthenticationRequest;
-import com.dylan.LiveFeed.auth.AuthenticationResponse;
+import com.dylan.LiveFeed.dto.AuthenticationRequest;
+import com.dylan.LiveFeed.dto.AuthenticationResponse;
 import com.dylan.LiveFeed.auth.AuthenticationService;
 import com.dylan.LiveFeed.auth.RegisterRequest;
 import com.dylan.LiveFeed.config.JwtService;
+import com.dylan.LiveFeed.dto.PostRequest;
 import com.dylan.LiveFeed.post.*;
 import com.dylan.LiveFeed.user.User;
 import com.dylan.LiveFeed.user.UserRepo;
@@ -48,7 +49,7 @@ Tests {
 
     @Test
     void testRegisterUser(){
-        RegisterRequest request = createUser("Dylan", "Anderson", "dylan@gmail.com", "password");
+        RegisterRequest request = createUser("Dylan", "Anderson", "dylanUnitTest@gmail.com", "password");
 
 
         AuthenticationResponse response = authService.register(request);
@@ -60,16 +61,16 @@ Tests {
         User user = userRepo.findByEmail(username)
                 .orElseThrow();
 
-        assertEquals("dylan", user.getFirstName());
-        assertEquals("anderson", user.getLastName());
-        assertEquals("dylan@gmail.com", user.getEmail());
+        assertEquals("Dylan", user.getFirstName());
+        assertEquals("Anderson", user.getLastName());
+        assertEquals("dylanUnitTest@gmail.com", user.getEmail());
     }
     @Test
     void testRegisterDuplicateUser(){
-        RegisterRequest request1 = createUser("Dylan", "Anderson", "dylan@gmail.com", "password");
+        RegisterRequest request1 = createUser("Dylan", "Anderson", "dylanUnitTest@gmail.com", "password");
         authService.register(request1);
 
-        RegisterRequest request2 = createUser("Dylan2", "Anderson", "dylan@gmail.com", "password");
+        RegisterRequest request2 = createUser("Dylan2", "Anderson", "dylanUnitTest@gmail.com", "password");
 
         assertThrows(
                 RuntimeException.class,
@@ -79,10 +80,10 @@ Tests {
 
     @Test
     void testAuthUser(){
-        RegisterRequest regRequest = createUser("Dylan", "Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan", "Anderson", "dylanUnitTest@gmail.com", "password");
         authService.register(regRequest);
 
-        AuthenticationRequest authRequest = new AuthenticationRequest("dylan@gmail.com", "password");
+        AuthenticationRequest authRequest = new AuthenticationRequest("dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.authenticate(authRequest);
 
         String token = response.getToken();
@@ -91,7 +92,7 @@ Tests {
 
     @Test
     void testCreatePost(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
@@ -99,7 +100,8 @@ Tests {
         User user = userRepo.findByEmail(username).orElse(null);
 
         String message = "message";
-        Post post = postService.createPost(message, user);
+        PostRequest request = new PostRequest(message);
+        Post post = postService.createPost(request, user);
 
         assertEquals(message, post.getMessage());
         assertEquals(user, post.getUser());
@@ -112,14 +114,16 @@ Tests {
 
     @Test
     void testDeletePost(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
         String username = jwtService.extractUsername(token);
         User user = userRepo.findByEmail(username).orElse(null);
 
-        Post post = postService.createPost("message", user);
+        String message = "message";
+        PostRequest request = new PostRequest(message);
+        Post post = postService.createPost(request, user);
         Long postId = post.getId();
 
         boolean deletePost = postService.deletePost(postId, user);
@@ -132,7 +136,7 @@ Tests {
 
     @Test
     void testUpdatePost(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
@@ -140,10 +144,12 @@ Tests {
         User user = userRepo.findByEmail(username).orElse(null);
 
         String message = "message";
-        Post post = postService.createPost(message, user);
+        PostRequest request = new PostRequest(message);
+        Post post = postService.createPost(request, user);
 
         String newMessage = "newMessage";
-        postService.updatePost(post.getId(), user, newMessage);
+        PostRequest newRequest = new PostRequest(newMessage);
+        postService.updatePost(post.getId(),newRequest, user);
 
         assertEquals(newMessage, post.getMessage());
         assertTrue(post.isUpdated());
@@ -152,7 +158,7 @@ Tests {
 
     @Test
     void testGetPostById(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
@@ -160,7 +166,8 @@ Tests {
         User user = userRepo.findByEmail(username).orElse(null);
 
         String message = "message";
-        Post post = postService.createPost(message, user);
+        PostRequest request = new PostRequest(message);
+        Post post = postService.createPost(request, user);
 
         Post postById = postService.getPostById(post.getId());
 
@@ -169,7 +176,7 @@ Tests {
 
     @Test
     void testGetPostsByUser(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
@@ -177,10 +184,11 @@ Tests {
         User user = userRepo.findByEmail(username).orElse(null);
 
         String message = "message";
-        Post post1 = postService.createPost(message, user);
-        Post post2 = postService.createPost(message, user);
-        Post post3 = postService.createPost(message, user);
-        Post post4 = postService.createPost(message, user);
+        PostRequest request = new PostRequest(message);
+        Post post1 = postService.createPost(request, user);
+        Post post2 = postService.createPost(request, user);
+        Post post3 = postService.createPost(request, user);
+        Post post4 = postService.createPost(request, user);
 
         assert user != null;
         List<Post> posts = postService.getPostsByUser(user.getId());
@@ -192,7 +200,7 @@ Tests {
 
     @Test
     void testInteraction(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
@@ -200,9 +208,10 @@ Tests {
         User user = userRepo.findByEmail(username).orElse(null);
 
         String message = "message";
-        Post post1 = postService.createPost(message, user);
-        Post post2 = postService.createPost(message, user);
-        Post post3 = postService.createPost(message, user);
+        PostRequest request = new PostRequest(message);
+        Post post1 = postService.createPost(request, user);
+        Post post2 = postService.createPost(request, user);
+        Post post3 = postService.createPost(request, user);
 
         assert user != null;
         postService.interaction(post1.getId(), user.getId(), InteractionType.LIKE);
@@ -223,7 +232,7 @@ Tests {
 
     @Test
     void testGetLast20Posts(){
-        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylan@gmail.com", "password");
+        RegisterRequest regRequest = createUser("Dylan","Anderson", "dylanUnitTest@gmail.com", "password");
         AuthenticationResponse response = authService.register(regRequest);
 
         String token = response.getToken();
@@ -231,7 +240,8 @@ Tests {
         User user = userRepo.findByEmail(username).orElse(null);
 
         for(int i = 0; i < 20;i++){
-            Post post = postService.createPost("message", user);
+            PostRequest request = new PostRequest("message");
+            Post post = postService.createPost(request, user);
             assertNotNull(post);
         }
 

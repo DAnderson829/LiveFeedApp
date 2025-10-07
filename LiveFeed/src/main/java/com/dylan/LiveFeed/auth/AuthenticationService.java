@@ -1,6 +1,8 @@
 package com.dylan.LiveFeed.auth;
 
 import com.dylan.LiveFeed.config.JwtService;
+import com.dylan.LiveFeed.dto.AuthenticationRequest;
+import com.dylan.LiveFeed.dto.AuthenticationResponse;
 import com.dylan.LiveFeed.exception.EmailAlreadyExistsException;
 import com.dylan.LiveFeed.user.Role;
 import com.dylan.LiveFeed.user.User;

@@ -1,5 +1,7 @@
 package com.dylan.LiveFeed.post;
 
+import com.dylan.LiveFeed.dto.PostRequest;
+import com.dylan.LiveFeed.dto.PostResponse;
 import com.dylan.LiveFeed.user.User;
 import com.dylan.LiveFeed.user.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +23,9 @@ public class PostService {
 
     private final InteractionRepo interactionRepo;
 
-    public Post createPost(String message, User user){
+    public Post createPost(PostRequest request, User user){
         Post post = Post.builder()
-                .message(message)
+                .message(request.message())
                 .user(user)
                 .createdAt(LocalDateTime.now())
                 .updated(false)
@@ -39,25 +41,26 @@ public class PostService {
         if (postOpt.isEmpty()) return false;
 
         Post post = postOpt.get();
-        if (!post.getUser().equals(user)) return false;
+
+        if (!post.getUser().getId().equals(user.getId())) return false;
 
         postRepo.delete(post);
         return true;
     }
 
-    public void updatePost(Long id, User user, String message){
-        Optional<Post> postOpt = postRepo.findById(id);
-        if (postOpt.isEmpty()) return;
+    public Post updatePost(Long postId, PostRequest request, User user){
+        Optional<Post> postOpt = postRepo.findById(postId);
+        if (postOpt.isEmpty()) return null;
 
         Post post = postOpt.get();
-        if (!post.getUser().equals(user)) return;
+        if (!post.getUser().getId().equals(user.getId())) return null;
 
-        post.setMessage(message);
+        post.setMessage(request.message());
         post.setUpdated(true);
         post.setUpdatedAt(LocalDateTime.now());
         postRepo.save(post);
 
-        return;
+        return post;
     }
 
     public Post getPostById(Long id){
@@ -82,4 +85,19 @@ public class PostService {
     public List<Post> getLast20Posts(){
         return postRepo.findLast20Posts();
     }
+
+    public List<PostResponse> convertFromPostToResponse(List<Post> posts){
+        return posts.stream()
+                .map(post -> new PostResponse(
+                        post.getId(),
+                        post.getMessage(),
+                        post.getUser().getUsername(),
+                        post.getCreatedAt(),
+                        post.isUpdated(),
+                        post.getUpdatedAt(),
+                        post.getLikeCount()
+                ))
+                .toList();
+    }
+
 }

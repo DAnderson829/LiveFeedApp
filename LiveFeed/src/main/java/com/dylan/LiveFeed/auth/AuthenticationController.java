@@ -1,8 +1,9 @@
 package com.dylan.LiveFeed.auth;
 
+import com.dylan.LiveFeed.dto.AuthenticationRequest;
+import com.dylan.LiveFeed.dto.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
